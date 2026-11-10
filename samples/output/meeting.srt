@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:04,240
+Good morning everyone, and thanks for joining the quarterly product review.
+
+2
+00:00:05,680 --> 00:00:11,520
+Today we will cover three topics, customer feedback, the release schedule, and hiring.
+
+3
+00:00:13,040 --> 00:00:19,440
+First, customer feedback. Support tickets dropped by 18% after the March update.
+
+4
+00:00:20,960 --> 00:00:26,800
+Second, the release schedule. Version 2.4 is planned for 15 July.
+
+5
+00:00:26,800 --> 00:00:34,800
+Finally, hiring. We are looking for two back-end engineers with experience in Python and cloud services.
+
+6
+00:00:34,800 --> 00:00:40,800
+Please send any questions to the team before Friday. Thank you.

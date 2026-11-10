@@ -1,0 +1,95 @@
+1
+00:00:00,000 --> 00:00:05,000
+Welcome to this short talk about building reliable data pipelines.
+
+2
+00:00:05,000 --> 00:00:13,000
+A pipeline takes raw input, validates it, transforms it, and delivers it to the systems that need it.
+
+3
+00:00:13,000 --> 00:00:21,000
+The first principle is to validate early. Reject bad input at the edge, before it wastes compute.
+
+4
+00:00:21,000 --> 00:00:31,000
+The second principle is to normalize. Convert every input into one internal representation, so the rest of the system has a single code path.
+
+5
+00:00:31,000 --> 00:00:40,000
+The third principle is to make work consumable. Large jobs should be split into pieces that can be retried independently.
+
+6
+00:00:40,000 --> 00:00:47,000
+The fourth principle is observability. Record how long each stage takes, how much data it processed.
+
+7
+00:00:48,150 --> 00:00:56,790
+and why it failed. Let us talk about audio specifically. Audio arrives in many containers and codex,
+
+8
+00:00:56,790 --> 00:01:07,990
+such as Wave, MP3, M4A, and AUG. Sample rates vary from 8 kHz telephone audio to 48 kHz studio recordings.
+
+9
+00:01:09,590 --> 00:01:16,230
+Speech recognition models usually expect 16 kHz mono audio, so resampling is a required step.
+
+10
+00:01:16,230 --> 00:01:26,230
+Long recordings, such as meetings or podcasts, can last for hours. Loading them entirely into memory is wasteful.
+
+11
+00:01:26,230 --> 00:01:34,230
+Instead, we stream the audio, cut it into chunks at natural pauses, and transcribe each chunk.
+
+12
+00:01:35,580 --> 00:01:43,580
+Each chunks timestamps are then shifted by the chunks offset, so the final transcript lines up with the original file.
+
+13
+00:01:43,580 --> 00:01:50,580
+Cutting it pauses matters, because cutting in the middle of a word produces errors at every boundary.
+
+14
+00:01:50,580 --> 00:01:55,580
+For production, long files should be processed asynchronously.
+
+15
+00:01:55,580 --> 00:02:00,580
+The client receives a job identifier and polls for the result.
+
+16
+00:02:00,580 --> 00:02:04,580
+Finally, the output should be useful downstream.
+
+17
+00:02:04,580 --> 00:02:12,580
+Time stamps per segment allow subtitles, search, and linking an answer back to the exact moment it was said.
+
+18
+00:02:12,580 --> 00:02:14,580
+Thank you for listening.
+
+19
+00:02:14,580 --> 00:02:19,650
+Welcome to this short talk about building reliable data pipelines.
+
+20
+00:02:20,470 --> 00:02:28,470
+A pipeline takes raw input, validates it, transforms it, and delivers it to the systems that need it.
+
+21
+00:02:28,470 --> 00:02:36,470
+The first principle is to validate early. Reject bad input at the edge, before it wastes compute.
+
+22
+00:02:36,470 --> 00:02:47,470
+The second principle is to normalize. Convert every input into one internal representation, so the rest of the system has a single code path.
+
+23
+00:02:47,470 --> 00:02:55,470
+The third principle is to make work resumable. Large jobs should be split into pieces that can be retried independently.
+
+24
+00:02:55,470 --> 00:03:05,470
+The fourth principle is observability. Record how long each stage takes, how much data it processed, and why it failed.

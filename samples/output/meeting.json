@@ -1,0 +1,82 @@
+{
+  "text": "Good morning everyone, and thanks for joining the quarterly product review. Today we will cover three topics, customer feedback, the release schedule, and hiring. First, customer feedback. Support tickets dropped by 18% after the March update. Second, the release schedule. Version 2.4 is planned for 15 July. Finally, hiring. We are looking for two back-end engineers with experience in Python and cloud services. Please send any questions to the team before Friday. Thank you.",
+  "language": "en",
+  "language_probability": 0.9994,
+  "duration_seconds": 42.473,
+  "segments": [
+    {
+      "id": 0,
+      "start": 0.0,
+      "end": 4.24,
+      "text": "Good morning everyone, and thanks for joining the quarterly product review.",
+      "avg_logprob": -0.1336594627549251,
+      "no_speech_prob": 0.009745937772095203,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 1,
+      "start": 5.68,
+      "end": 11.52,
+      "text": "Today we will cover three topics, customer feedback, the release schedule, and hiring.",
+      "avg_logprob": -0.1336594627549251,
+      "no_speech_prob": 0.009745937772095203,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 2,
+      "start": 13.04,
+      "end": 19.44,
+      "text": "First, customer feedback. Support tickets dropped by 18% after the March update.",
+      "avg_logprob": -0.1336594627549251,
+      "no_speech_prob": 0.009745937772095203,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 3,
+      "start": 20.96,
+      "end": 26.8,
+      "text": "Second, the release schedule. Version 2.4 is planned for 15 July.",
+      "avg_logprob": -0.1336594627549251,
+      "no_speech_prob": 0.009745937772095203,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 4,
+      "start": 26.8,
+      "end": 34.8,
+      "text": "Finally, hiring. We are looking for two back-end engineers with experience in Python and cloud services.",
+      "avg_logprob": -0.26131054224112094,
+      "no_speech_prob": 0.008516136556863785,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 5,
+      "start": 34.8,
+      "end": 40.8,
+      "text": "Please send any questions to the team before Friday. Thank you.",
+      "avg_logprob": -0.26131054224112094,
+      "no_speech_prob": 0.008516136556863785,
+      "low_confidence": false,
+      "words": null
+    }
+  ],
+  "audio": {
+    "filename": "meeting.wav",
+    "container": "wav",
+    "codec": "pcm_s16le",
+    "sample_rate": 22050,
+    "channels": 1,
+    "duration_seconds": 42.473,
+    "size_bytes": 1873094
+  },
+  "engine": "faster-whisper",
+  "model": "base",
+  "chunks": 1,
+  "processing_seconds": 5.836,
+  "real_time_factor": 0.1374
+}

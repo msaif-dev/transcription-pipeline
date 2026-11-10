@@ -1,0 +1,262 @@
+{
+  "text": "Welcome to this short talk about building reliable data pipelines. A pipeline takes raw input, validates it, transforms it, and delivers it to the systems that need it. The first principle is to validate early. Reject bad input at the edge, before it wastes compute. The second principle is to normalize. Convert every input into one internal representation, so the rest of the system has a single code path. The third principle is to make work consumable. Large jobs should be split into pieces that can be retried independently. The fourth principle is observability. Record how long each stage takes, how much data it processed. and why it failed. Let us talk about audio specifically. Audio arrives in many containers and codex, such as Wave, MP3, M4A, and AUG. Sample rates vary from 8 kHz telephone audio to 48 kHz studio recordings. Speech recognition models usually expect 16 kHz mono audio, so resampling is a required step. Long recordings, such as meetings or podcasts, can last for hours. Loading them entirely into memory is wasteful. Instead, we stream the audio, cut it into chunks at natural pauses, and transcribe each chunk. Each chunks timestamps are then shifted by the chunks offset, so the final transcript lines up with the original file. Cutting it pauses matters, because cutting in the middle of a word produces errors at every boundary. For production, long files should be processed asynchronously. The client receives a job identifier and polls for the result. Finally, the output should be useful downstream. Time stamps per segment allow subtitles, search, and linking an answer back to the exact moment it was said. Thank you for listening. Welcome to this short talk about building reliable data pipelines. A pipeline takes raw input, validates it, transforms it, and delivers it to the systems that need it. The first principle is to validate early. Reject bad input at the edge, before it wastes compute. The second principle is to normalize. Convert every input into one internal representation, so the rest of the system has a single code path. The third principle is to make work resumable. Large jobs should be split into pieces that can be retried independently. The fourth principle is observability. Record how long each stage takes, how much data it processed, and why it failed.",
+  "language": "en",
+  "language_probability": 0.9997,
+  "duration_seconds": 186.362,
+  "segments": [
+    {
+      "id": 0,
+      "start": 0.0,
+      "end": 5.0,
+      "text": "Welcome to this short talk about building reliable data pipelines.",
+      "avg_logprob": -0.12469461257569492,
+      "no_speech_prob": 0.0073232403956353664,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 1,
+      "start": 5.0,
+      "end": 13.0,
+      "text": "A pipeline takes raw input, validates it, transforms it, and delivers it to the systems that need it.",
+      "avg_logprob": -0.12469461257569492,
+      "no_speech_prob": 0.0073232403956353664,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 2,
+      "start": 13.0,
+      "end": 21.0,
+      "text": "The first principle is to validate early. Reject bad input at the edge, before it wastes compute.",
+      "avg_logprob": -0.12469461257569492,
+      "no_speech_prob": 0.0073232403956353664,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 3,
+      "start": 21.0,
+      "end": 31.0,
+      "text": "The second principle is to normalize. Convert every input into one internal representation, so the rest of the system has a single code path.",
+      "avg_logprob": -0.07243946876566289,
+      "no_speech_prob": 0.029283782467246056,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 4,
+      "start": 31.0,
+      "end": 40.0,
+      "text": "The third principle is to make work consumable. Large jobs should be split into pieces that can be retried independently.",
+      "avg_logprob": -0.07243946876566289,
+      "no_speech_prob": 0.029283782467246056,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 5,
+      "start": 40.0,
+      "end": 47.0,
+      "text": "The fourth principle is observability. Record how long each stage takes, how much data it processed.",
+      "avg_logprob": -0.06470144572465317,
+      "no_speech_prob": 0.033091217279434204,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 6,
+      "start": 48.15,
+      "end": 56.79,
+      "text": "and why it failed. Let us talk about audio specifically. Audio arrives in many containers and codex,",
+      "avg_logprob": -0.15129542645112967,
+      "no_speech_prob": 0.018124444410204887,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 7,
+      "start": 56.79,
+      "end": 67.99,
+      "text": "such as Wave, MP3, M4A, and AUG. Sample rates vary from 8 kHz telephone audio to 48 kHz studio recordings.",
+      "avg_logprob": -0.15129542645112967,
+      "no_speech_prob": 0.018124444410204887,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 8,
+      "start": 69.59,
+      "end": 76.23,
+      "text": "Speech recognition models usually expect 16 kHz mono audio, so resampling is a required step.",
+      "avg_logprob": -0.15129542645112967,
+      "no_speech_prob": 0.018124444410204887,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 9,
+      "start": 76.23,
+      "end": 86.23,
+      "text": "Long recordings, such as meetings or podcasts, can last for hours. Loading them entirely into memory is wasteful.",
+      "avg_logprob": -0.10879228950715532,
+      "no_speech_prob": 0.008741587400436401,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 10,
+      "start": 86.23,
+      "end": 94.23,
+      "text": "Instead, we stream the audio, cut it into chunks at natural pauses, and transcribe each chunk.",
+      "avg_logprob": -0.10879228950715532,
+      "no_speech_prob": 0.008741587400436401,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 11,
+      "start": 95.58,
+      "end": 103.58,
+      "text": "Each chunks timestamps are then shifted by the chunks offset, so the final transcript lines up with the original file.",
+      "avg_logprob": -0.09230257435278459,
+      "no_speech_prob": 0.003910300321877003,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 12,
+      "start": 103.58,
+      "end": 110.58,
+      "text": "Cutting it pauses matters, because cutting in the middle of a word produces errors at every boundary.",
+      "avg_logprob": -0.09230257435278459,
+      "no_speech_prob": 0.003910300321877003,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 13,
+      "start": 110.58,
+      "end": 115.58,
+      "text": "For production, long files should be processed asynchronously.",
+      "avg_logprob": -0.09230257435278459,
+      "no_speech_prob": 0.003910300321877003,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 14,
+      "start": 115.58,
+      "end": 120.58,
+      "text": "The client receives a job identifier and polls for the result.",
+      "avg_logprob": -0.09230257435278459,
+      "no_speech_prob": 0.003910300321877003,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 15,
+      "start": 120.58,
+      "end": 124.58,
+      "text": "Finally, the output should be useful downstream.",
+      "avg_logprob": -0.09230257435278459,
+      "no_speech_prob": 0.003910300321877003,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 16,
+      "start": 124.58,
+      "end": 132.58,
+      "text": "Time stamps per segment allow subtitles, search, and linking an answer back to the exact moment it was said.",
+      "avg_logprob": -0.1266777065065172,
+      "no_speech_prob": 0.0023340664338320494,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 17,
+      "start": 132.58,
+      "end": 134.58,
+      "text": "Thank you for listening.",
+      "avg_logprob": -0.1266777065065172,
+      "no_speech_prob": 0.0023340664338320494,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 18,
+      "start": 134.58,
+      "end": 139.65,
+      "text": "Welcome to this short talk about building reliable data pipelines.",
+      "avg_logprob": -0.1266777065065172,
+      "no_speech_prob": 0.0023340664338320494,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 19,
+      "start": 140.47,
+      "end": 148.47,
+      "text": "A pipeline takes raw input, validates it, transforms it, and delivers it to the systems that need it.",
+      "avg_logprob": -0.08028663931096472,
+      "no_speech_prob": 0.009688488207757473,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 20,
+      "start": 148.47,
+      "end": 156.47,
+      "text": "The first principle is to validate early. Reject bad input at the edge, before it wastes compute.",
+      "avg_logprob": -0.08028663931096472,
+      "no_speech_prob": 0.009688488207757473,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 21,
+      "start": 156.47,
+      "end": 167.47,
+      "text": "The second principle is to normalize. Convert every input into one internal representation, so the rest of the system has a single code path.",
+      "avg_logprob": -0.08028663931096472,
+      "no_speech_prob": 0.009688488207757473,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 22,
+      "start": 167.47,
+      "end": 175.47,
+      "text": "The third principle is to make work resumable. Large jobs should be split into pieces that can be retried independently.",
+      "avg_logprob": -0.05370088829235597,
+      "no_speech_prob": 0.0038744714111089706,
+      "low_confidence": false,
+      "words": null
+    },
+    {
+      "id": 23,
+      "start": 175.47,
+      "end": 185.47,
+      "text": "The fourth principle is observability. Record how long each stage takes, how much data it processed, and why it failed.",
+      "avg_logprob": -0.05370088829235597,
+      "no_speech_prob": 0.0038744714111089706,
+      "low_confidence": false,
+      "words": null
+    }
+  ],
+  "audio": {
+    "filename": "long_talk.mp3",
+    "container": "mp3",
+    "codec": "mp3float",
+    "sample_rate": 22050,
+    "channels": 1,
+    "duration_seconds": 186.362,
+    "size_bytes": 1491739
+  },
+  "engine": "faster-whisper",
+  "model": "base",
+  "chunks": 4,
+  "processing_seconds": 19.136,
+  "real_time_factor": 0.1027
+}
