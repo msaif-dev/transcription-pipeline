@@ -119,20 +119,23 @@ RTF = processing time ÷ audio length, so 0.11 is about 9x faster than real time
 The repo is a single-process prototype. Its in-memory job store and local temp files work for one machine, but they lose jobs on restart and can't scale out. The design below keeps the same pipeline code (`app/pipeline.py` and everything under it) and changes what surrounds it. Examples use AWS; the same shape works on GCP or Azure.
 
 ```
-                         ┌──────────────────────────── control plane ────────────────────────────┐
-  client ──HTTPS──► API Gateway / ALB ──► API service (FastAPI, stateless, autoscaled)              │
-    │                (auth, rate limit,      │  • POST /v1/uploads → presigned S3 URL               │
-    │                 quotas, WAF)           │  • POST /v1/transcriptions → job row + queue message  │
-    │                                        │  • GET status / transcript / list / DELETE           │
-    │                                        ├──► Postgres (jobs, chunks, segments, idempotency)    │
-    │                                        └──► SQS  transcription queue  ──(3 failures)──► DLQ ──► alarm
-    │                                                     │
-    └──PUT audio (multipart, direct)──► S3 raw/           ▼                  ┌──────── data plane ────────┐
-                                        S3 transcripts/ ◄── GPU workers (ECS/EKS, spot, autoscale on queue depth)
-                                                            validate → decode → chunk → STT → post-process
-                                                            per-chunk checkpoints in Postgres + S3
-                                                            ──► webhook (job.completed / job.failed, HMAC-signed)
-                                                            ──► optional: embeddings → vector DB (RAG with timestamp citations)
+ client ──HTTPS──► API Gateway / ALB ──► API service (FastAPI, stateless, autoscaled)
+   │               auth, rate limits,      • POST /v1/uploads        → presigned S3 URL
+   │               quotas, WAF             • POST /v1/transcriptions → job row + queue message
+   │                                       • GET status / transcript / list, DELETE
+   │                                             │                    │
+   │                                             ▼                    ▼
+   │                                     Postgres                SQS queue ──(3 failures)──► DLQ ──► alarm
+   │                                     jobs, chunks, segments,      │
+   │                                     idempotency keys             ▼
+   │                                             ▲              GPU workers (ECS/EKS, spot, autoscale on queue depth)
+   │                                             └───────────── validate → decode → chunk → STT → post-process
+   │                                                            (status + per-chunk checkpoints)
+   │                                                                  ▲   │
+   └──PUT audio (direct, multipart)──► S3 raw/ ───────────────────────┘   │
+                                       S3 transcripts/ ◄──────────────────┤
+                                                                          ├──► webhook: job.completed / job.failed (HMAC-signed)
+                                                                          └──► optional: embeddings → vector DB (RAG, timestamp citations)
 ```
 
 ### 1. Concurrent uploads
