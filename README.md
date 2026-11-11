@@ -124,6 +124,15 @@ RTF = processing time ÷ audio length, so 0.11 is about 9x faster than real time
 
 The repo is a single-process prototype. Its in-memory job store and local temp files work for one machine, but they lose jobs on restart and can't scale out. The design below keeps the same pipeline code (`app/pipeline.py` and everything under it) and changes what surrounds it. Examples use AWS; the same shape works on GCP or Azure.
 
+**What the prototype already does vs. what is design only** (prototype behavior verified against the running Docker service):
+
+| Topic | ✅ Built and tested in this repo | 📐 Production design (below) |
+|---|---|---|
+| Concurrent uploads | Async endpoints; streamed uploads (1 MB blocks, size limit, unique names); one bounded worker pool for sync and async. 4 simultaneous uploads: all `200`, processed in order, `/health` stayed under 10 ms | Presigned direct-to-S3 uploads, SQS queue, autoscaled GPU workers, priority lane, rate limits, idempotency / content-hash de-duplication, backpressure (`429`) |
+| Storage | Uploads stored temporarily and deleted after processing (verified: upload dir empty). Results kept in memory; **lost on restart** (verified: `404` after restart) | S3 for audio (with lifecycle) and versioned transcript JSON, Postgres for job/chunk state and segments, vector DB for RAG |
+| Failure handling | Permanent input errors → immediate `413/415/422`; unexpected errors → job `failed` + logged traceback; tolerates a few corrupt packets; Docker auto-restarts the service if it exits (verified) | Retries with backoff + DLQ, heartbeats and a stuck-job reaper, idempotent writes, per-chunk checkpoints, model fallbacks, retry endpoint. Audio must be kept (the prototype deletes it even on failure, so jobs can't be retried) |
+| API | `POST /v1/transcriptions` (auto sync/async, 4 output formats), `GET /v1/jobs/{id}`, `GET /v1/jobs/{id}/transcript`, `GET /health`, OpenAPI `/docs`, status codes 200/202/404/409/413/415/422 | Auth, rate limits, presigned uploads, webhooks, list/retry/delete, problem+json errors, `/v1/transcriptions/{id}` naming |
+
 ```
  client ──HTTPS──► API Gateway / ALB ──► API service (FastAPI, stateless, autoscaled)
    │               auth, rate limits,      • POST /v1/uploads        → presigned S3 URL
