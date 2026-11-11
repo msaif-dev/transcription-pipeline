@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from app.audio import AudioTooLongError
+from app.audio import AudioTooLongError, InvalidOptionError
 from app.engines.mock_engine import MockEngine
 from app.models import Segment, TranscriptionResult
 from app.pipeline import TranscriptionPipeline
@@ -32,6 +32,13 @@ def test_duration_limit_enforced(speechlike_wav: Path, settings):
     settings.max_duration_seconds = 10
     with pytest.raises(AudioTooLongError):
         TranscriptionPipeline(MockEngine(), settings).run(speechlike_wav)
+
+
+def test_invalid_language_raises_clear_error(speechlike_wav: Path, settings):
+    engine = MockEngine()
+    with pytest.raises(InvalidOptionError, match="Unsupported language 'klingon'"):
+        TranscriptionPipeline(engine, settings).run(speechlike_wav, language="klingon")
+    assert engine.calls == 0  # rejected before any transcription work
 
 
 def test_finalize_cleans_and_flags_low_confidence():

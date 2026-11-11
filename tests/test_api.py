@@ -15,9 +15,9 @@ def client(settings):
         yield c
 
 
-def _upload(client, path: Path, **params):
+def _upload(client, path: Path, data: dict | None = None, **params):
     with path.open("rb") as fh:
-        return client.post("/v1/transcriptions", files={"file": (path.name, fh)}, params=params)
+        return client.post("/v1/transcriptions", files={"file": (path.name, fh)}, data=data, params=params)
 
 
 def _wait(client, job_id: str, timeout: float = 10.0) -> dict:
@@ -84,6 +84,22 @@ def test_oversized_upload_is_413(settings, tmp_path, speechlike_wav):
     settings.max_upload_mb = 1  # speech.wav is ~4.4 MB
     with TestClient(create_app(settings, MockEngine())) as c:
         assert _upload(c, speechlike_wav).status_code == 413
+
+
+def test_invalid_language_is_rejected_before_any_job_is_queued(client, speechlike_wav, settings):
+    # Swagger UI pre-fills optional string fields with the literal "string"; that once produced
+    # a 202 followed by a failed job. It must be an immediate, explanatory 422 instead.
+    r = _upload(client, speechlike_wav, data={"language": "string"}, mode="async")
+    assert r.status_code == 422
+    assert "Unsupported language 'string'" in r.json()["detail"]
+    assert not settings.upload_dir.exists() or not any(settings.upload_dir.iterdir())
+
+
+@pytest.mark.parametrize(("sent", "expected"), [("auto", "en"), ("", "en"), ("EN", "en"), ("fr", "fr")])
+def test_language_auto_empty_and_case_insensitive(client, speechlike_wav, sent, expected):
+    r = _upload(client, speechlike_wav, data={"language": sent})
+    assert r.status_code == 200
+    assert r.json()["language"] == expected  # mock engine: auto-detect -> 'en', explicit code echoed
 
 
 def test_unknown_job_is_404(client):

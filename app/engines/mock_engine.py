@@ -24,6 +24,10 @@ class MockEngine(TranscriptionEngine):
     def model_name(self) -> str:
         return "mock"
 
+    @property
+    def supported_languages(self) -> frozenset[str] | None:
+        return frozenset({"en", "es", "fr", "de", "ar", "ur", "hi", "zh"})
+
     def transcribe(
         self,
         audio: np.ndarray,

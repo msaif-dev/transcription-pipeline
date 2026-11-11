@@ -25,7 +25,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("input", type=Path, help="Audio file (WAV, MP3, M4A, FLAC, OGG, WebM, MP4, ...)")
     p.add_argument("-f", "--format", choices=EXPORT_FORMATS, default="json")
     p.add_argument("-o", "--output", type=Path, help="Write to this file instead of stdout")
-    p.add_argument("--language", help="ISO-639-1 code (e.g. en). Default: auto-detect")
+    p.add_argument("--language", help="ISO-639-1 code (e.g. en), or 'auto' (default) to detect it")
     p.add_argument("--words", action="store_true", help="Include word-level timestamps")
     p.add_argument("--engine", choices=["faster-whisper", "mock"])
     p.add_argument("--model", help="Whisper model size, e.g. tiny, base, small, medium, large-v3")

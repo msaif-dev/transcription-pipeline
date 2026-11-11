@@ -27,6 +27,15 @@ class FasterWhisperEngine(TranscriptionEngine):
     def model_name(self) -> str:
         return self._settings.model_size
 
+    @property
+    def supported_languages(self) -> frozenset[str] | None:
+        try:  # Whisper's own list (~100 codes); imported lazily, no model load needed
+            from faster_whisper.tokenizer import _LANGUAGE_CODES
+
+            return frozenset(_LANGUAGE_CODES)
+        except ImportError:
+            return None
+
     def _get_model(self):
         # Lazy, thread-safe load: weights are downloaded/loaded once and shared by all workers.
         if self._model is None:

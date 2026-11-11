@@ -8,7 +8,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from . import audio as audio_mod
-from .audio import TARGET_SAMPLE_RATE, AudioTooLongError
+from .audio import TARGET_SAMPLE_RATE, AudioTooLongError, InvalidOptionError
 from .chunking import silence_aware_chunks
 from .config import Settings
 from .engines import TranscriptionEngine
@@ -18,6 +18,27 @@ from .postprocess import finalize_segments
 log = logging.getLogger(__name__)
 
 ProgressCallback = Callable[[float | None, int], None]  # (fraction 0..1 or None if unknown, chunks done)
+
+AUTO_LANGUAGE = "auto"
+
+
+def normalize_language(language: str | None, supported: frozenset[str] | None) -> str | None:
+    """'' / 'auto' / None -> None (auto-detect); otherwise a validated lowercase code.
+
+    Validated up front so a bad value is a clear 4xx before any work is queued, rather than
+    an engine error minutes later.
+    """
+    if language is None:
+        return None
+    code = language.strip().lower()
+    if code in ("", AUTO_LANGUAGE):
+        return None
+    if supported is not None and code not in supported:
+        raise InvalidOptionError(
+            f"Unsupported language '{language}'. Use an ISO-639-1 code such as 'en', 'es' or 'ar', "
+            f"or '{AUTO_LANGUAGE}' to detect it automatically."
+        )
+    return code
 
 
 class TranscriptionPipeline:
@@ -37,6 +58,7 @@ class TranscriptionPipeline:
         s = self.settings
         started = time.perf_counter()
         word_ts = s.word_timestamps if word_timestamps is None else word_timestamps
+        language = normalize_language(language, self.engine.supported_languages)
 
         info = audio_mod.probe(Path(path), filename)
         if info.duration_seconds is not None and info.duration_seconds > s.max_duration_seconds:

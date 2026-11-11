@@ -28,7 +28,7 @@ from .config import Settings, get_settings
 from .engines import TranscriptionEngine, create_engine
 from .jobs import JobManager
 from .models import Job, JobStatus, TranscriptionResult
-from .pipeline import TranscriptionPipeline
+from .pipeline import AUTO_LANGUAGE, TranscriptionPipeline, normalize_language
 from .postprocess import MEDIA_TYPES, export
 
 log = logging.getLogger(__name__)
@@ -97,7 +97,9 @@ def create_app(settings: Settings | None = None, engine: TranscriptionEngine | N
     )
     async def create_transcription(
         file: UploadFile = File(..., description="Audio file (WAV, MP3, M4A, FLAC, OGG, WebM, MP4...)"),
-        language: str | None = Form(None, description="ISO-639-1 code, e.g. 'en'. Omit to auto-detect."),
+        language: str = Form(
+            AUTO_LANGUAGE, description="ISO-639-1 code such as 'en', 'es', 'ar', or 'auto' to detect it automatically."
+        ),
         word_timestamps: bool | None = Form(None),
         mode: Literal["auto", "sync", "async"] = Query(
             "auto", description="auto: sync if duration <= STT_SYNC_MAX_DURATION_SECONDS, else async job"
@@ -106,6 +108,7 @@ def create_app(settings: Settings | None = None, engine: TranscriptionEngine | N
     ):
         filename = Path(file.filename or "upload").name
         ext = check_extension(filename, settings.allowed_extensions)
+        lang = normalize_language(language, engine.supported_languages)  # 422 now, not a failed job later
         path = await _save_upload(file, ext)
         try:
             info = await asyncio.to_thread(probe, path, filename)  # rejects non-audio before queueing
@@ -120,7 +123,7 @@ def create_app(settings: Settings | None = None, engine: TranscriptionEngine | N
             mode == "auto"
             and (info.duration_seconds is None or info.duration_seconds > settings.sync_max_duration_seconds)
         )
-        job, future = jobs.submit(path, filename, language=language, word_timestamps=word_timestamps)
+        job, future = jobs.submit(path, filename, language=lang, word_timestamps=word_timestamps)
 
         if run_async:
             return JSONResponse(

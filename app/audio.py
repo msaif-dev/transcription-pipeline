@@ -40,6 +40,10 @@ class AudioTooLongError(AudioError):
     pass
 
 
+class InvalidOptionError(AudioError):
+    """A request option (e.g. the language code) is invalid."""
+
+
 def check_extension(filename: str, allowed: frozenset[str]) -> str:
     ext = Path(filename).suffix.lower()
     if ext not in allowed:

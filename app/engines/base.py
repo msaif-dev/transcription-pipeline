@@ -46,6 +46,11 @@ class TranscriptionEngine(ABC):
     @abstractmethod
     def model_name(self) -> str: ...
 
+    @property
+    def supported_languages(self) -> frozenset[str] | None:
+        """Language codes this engine accepts, or None if it accepts any."""
+        return None
+
     def warmup(self) -> None:
         """Load model weights ahead of the first request (optional)."""
 

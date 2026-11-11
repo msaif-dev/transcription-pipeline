@@ -73,7 +73,7 @@ docker build --build-arg MODEL_SIZE=base -t transcriber . && docker run -p 8000:
 
 | Method | Path | Notes |
 |---|---|---|
-| `POST` | `/v1/transcriptions` | multipart `file`, optional form `language` (ISO-639-1), `word_timestamps`; query `mode=auto\|sync\|async`, `format=json\|txt\|srt\|vtt`. `auto` = sync if ≤ `STT_SYNC_MAX_DURATION_SECONDS`, otherwise a job |
+| `POST` | `/v1/transcriptions` | multipart `file`, optional form `language` (ISO-639-1 code, or `auto` = default; invalid codes get an immediate 422), `word_timestamps`; query `mode=auto\|sync\|async`, `format=json\|txt\|srt\|vtt`. `auto` = sync if ≤ `STT_SYNC_MAX_DURATION_SECONDS`, otherwise a job |
 | `GET` | `/v1/jobs/{id}` | `queued → processing → completed/failed`, `progress` 0–1, `result` |
 | `GET` | `/v1/jobs/{id}/transcript?format=` | 409 until completed |
 | `GET` | `/health` | engine + model |
@@ -105,6 +105,7 @@ All settings live in `app/config.py` and can be overridden with `STT_*` env vars
 |---|---|---|---|---|
 | `meeting.wav` (22 kHz WAV) | 42.5 s | 5.8 s | 0.14 | 1 |
 | `long_talk.mp3` (via API, async job, 60 s chunks) | 186.4 s | 19.9 s | 0.11 | 4, cut at 50.0 / 103.1 / 155.8 s, each in a pause between sentences |
+| Real lecture **video** (`.mkv`, 72 MB, Indian-English speaker, in Docker, word timestamps on) | 22 min 26 s | 3 min 19 s | 0.15 | 3 (default 10 min), cut at 601.2 / 1213.1 s, both in speaker pauses: no lost or duplicated words; 188 segments, 3,806 words, language `en` (p = 0.99) |
 
 RTF = processing time ÷ audio length, so 0.11 is about 9x faster than real time. A 1-hour file is about 7 min on this laptop. On a GPU (`STT_DEVICE=cuda STT_COMPUTE_TYPE=float16`) it's much faster, even with `large-v3`.
 
