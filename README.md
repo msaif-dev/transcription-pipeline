@@ -58,7 +58,8 @@ python scripts/demo_api.py samples/long_talk.mp3                                
 # Tests (mock engine, no model download, ~2 s)
 pytest
 
-# Docker (model baked into the image)
+# Docker: model baked into the image (~890 MB), runs as a non-root user, needs no internet at runtime,
+# includes a HEALTHCHECK on /health
 docker build --build-arg MODEL_SIZE=base -t transcriber . && docker run -p 8000:8000 transcriber
 ```
 
