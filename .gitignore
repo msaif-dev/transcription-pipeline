@@ -1,7 +1,38 @@
-.venv/
+# Byte-compiled / cache files
 __pycache__/
+*.py[cod]
+*$py.class
 .pytest_cache/
-data/
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment variables & local data
 .env
-*.pyc
+.env.local
+.env.*.local
+data/
+
+# Coverage & test artifacts
+.coverage
+htmlcov/
+.tox/
+
+# Local audio generation / raw artifacts
 samples/long_talk.wav
+
