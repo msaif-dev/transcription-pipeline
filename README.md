@@ -55,7 +55,7 @@ curl "http://localhost:8000/v1/jobs/<id>"                                       
 curl "http://localhost:8000/v1/jobs/<id>/transcript?format=vtt"
 python scripts/demo_api.py samples/long_talk.mp3                                           # scripted demo
 
-# Tests (mock engine, no model download, ~2 s)
+# Tests (mock engine, no model download, a few seconds)
 pytest
 
 # Docker Compose (easiest): one command builds and starts the service, then open http://localhost:8000/docs
