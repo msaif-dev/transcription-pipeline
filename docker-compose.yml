@@ -1,0 +1,29 @@
+# One-command start:   docker compose up -d --build
+# Then open:           http://localhost:8000/docs
+# Logs:                docker compose logs -f
+# Stop & remove:       docker compose down
+#
+# Every ${NAME:-default} below can be overridden in your shell or in a .env file next to this file,
+# e.g.  PORT=8080  or  MODEL_SIZE=small  (MODEL_SIZE needs a rebuild: docker compose up -d --build)
+
+services:
+  transcriber:
+    build:
+      context: .
+      args:
+        MODEL_SIZE: ${MODEL_SIZE:-base}   # baked into the image (tiny | base | small | medium | large-v3)
+    image: transcriber:${MODEL_SIZE:-base}
+    container_name: transcriber
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      STT_SYNC_MAX_DURATION_SECONDS: ${STT_SYNC_MAX_DURATION_SECONDS:-60}  # longer files become background jobs
+      STT_MAX_UPLOAD_MB: ${STT_MAX_UPLOAD_MB:-500}
+      STT_MAX_DURATION_SECONDS: ${STT_MAX_DURATION_SECONDS:-14400}
+      STT_CHUNK_SECONDS: ${STT_CHUNK_SECONDS:-600}
+      STT_JOB_WORKERS: ${STT_JOB_WORKERS:-1}
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4g             # base model needs ~1 GB; raise for medium / large-v3

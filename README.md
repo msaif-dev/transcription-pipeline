@@ -58,7 +58,11 @@ python scripts/demo_api.py samples/long_talk.mp3                                
 # Tests (mock engine, no model download, ~2 s)
 pytest
 
-# Docker: model baked into the image (~890 MB), runs as a non-root user, needs no internet at runtime,
+# Docker Compose (easiest): one command builds and starts the service, then open http://localhost:8000/docs
+docker compose up -d --build        # logs: docker compose logs -f     stop: docker compose down
+# Settings via env or .env file, e.g. PORT=8080, MODEL_SIZE=small (rebuild), STT_SYNC_MAX_DURATION_SECONDS=120
+
+# Plain Docker: model baked into the image (~890 MB), runs as a non-root user, needs no internet at runtime,
 # includes a HEALTHCHECK on /health
 docker build --build-arg MODEL_SIZE=base -t transcriber . && docker run -p 8000:8000 transcriber
 ```
