@@ -1,6 +1,6 @@
 # Transcription Pipeline
 
-A small, production-minded service that turns an audio file into **timestamped text** that's ready for downstream use (search, subtitles, RAG/LLM processing).
+A small, production-minded service that turns an audio file (or audio in a video file) into **timestamped text** that's ready for downstream use (search, subtitles, RAG/LLM processing).
 
 - **Accepts** WAV, MP3, M4A/AAC, FLAC, OGG/Opus, WebM, WMA, AMR, and the audio track of MP4/MOV/MKV
 - **Transcribes** with open-source Whisper via [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (CTranslate2, int8 on CPU, Silero VAD)
